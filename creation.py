@@ -64,6 +64,7 @@ def hashing(unencrypted_block):
     # try not a dict imported
     unencrypted_string = json.dumps(unencrypted_block)
     unencrypted_bytes = unencrypted_string.encode()
+    print(unencrypted_bytes)
     encrypted_bytes = hashlib.sha256(unencrypted_bytes)
     encrypted_block = encrypted_bytes.hexdigest()
     return encrypted_block
@@ -116,9 +117,9 @@ def extract_chain(file):
 
 def main():
     '''test function to check script Creates a blockchain'''
-    #start_chain('data1')
-    #begin_chain('thats a chain')
-    #make_block('dom')
+    start_chain('data1')
+    begin_chain('thats a chain')
+    make_block('dom')
     chain1 = extract_chain('the_chain.json')
     chain2 = extract_chain('the_chain2.json')
     print(correct_chain(chain1, chain2))
