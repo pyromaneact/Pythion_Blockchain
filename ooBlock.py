@@ -29,25 +29,23 @@ class block:
         data += str(self.nonce)
         return bytes(data, 'utf-8')
 
-    def __fitness__(self, value):
-        return str(value)
-
 class Chain:
     
     chains=0
     
-    def __init__(self, chain):
+    def __init__(self, chain, fittness='''Chain.__fitness__(self, '0')'''):
         self.chain=chain
         self.length=len(chain)
+        self.fitnessFunction=fittness
         Chain.chains += 1
 
-    def addBlock(self, data, fittness='''self.__fitness__('0')'''):
+    def addBlock(self, data):
         timestamp = self.__time__()
         if self.length == 0:
             lastHash = '0'
         else:
             lastHash = self.__hashing__(self.chain[-1])
-        self.chain.append(block(self, data, timestamp, lastHash, fittness))
+        self.chain.append(block(self, data, timestamp, lastHash, self.fitnessFunction))
 
     def __time__(self):
         utc_time = datetime.utcnow()
@@ -61,6 +59,7 @@ class Chain:
         return encrypted_block
     
     def __fitness__(self, value):
+        print(self.chain)
         return str(value)
 
 def main():
