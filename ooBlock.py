@@ -12,8 +12,10 @@ class block:
         self.__generateNonce__(thechain)
 
     def __generateNonce__( self, thechain):
+        fitness={'self':self}
+        exec('check =' + self.fitness, globals(), fitness)
         hashed_block = thechain.__hashing__(self)
-        while (hashed_block[0:len(self.fitness)] != self.fitness):
+        while (hashed_block[0:len(fitness['check'])] != fitness['check']):
             new_nonce = random.randint(0, 2147483647)
             self.nonce = new_nonce
             hashed_block = thechain.__hashing__(self)
@@ -27,6 +29,9 @@ class block:
         data += str(self.nonce)
         return bytes(data, 'utf-8')
 
+    def __fitness__(self, value):
+        return str(value)
+
 class Chain:
     
     chains=0
@@ -36,13 +41,13 @@ class Chain:
         self.length=len(chain)
         Chain.chains += 1
 
-    def addBlock(self, data):
+    def addBlock(self, data, fittness='''self.__fitness__('0')'''):
         timestamp = self.__time__()
         if self.length == 0:
             lastHash = '0'
         else:
             lastHash = self.__hashing__(self.chain[-1])
-        self.chain.append(block(self, data, timestamp, lastHash, '0'))
+        self.chain.append(block(self, data, timestamp, lastHash, fittness))
 
     def __time__(self):
         utc_time = datetime.utcnow()
@@ -54,6 +59,9 @@ class Chain:
         encrypted_bytes = hashlib.sha256(unencrypted_bytes)
         encrypted_block = encrypted_bytes.hexdigest()
         return encrypted_block
+    
+    def __fitness__(self, value):
+        return str(value)
 
 def main():
     '''test function to check script Creates a blockchain'''
