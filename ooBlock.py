@@ -2,7 +2,39 @@ from datetime import datetime
 import hashlib
 import random
 
-class block:
+class Chain:
+    
+    chains=0
+    
+    def __init__(self, chain, fittness='''self.__fitness__('0')'''):
+        self.chain=chain
+        self.length=len(chain)
+        self.fitnessFunction=fittness
+        Chain.chains += 1
+
+    def addBlock(self, data):
+        timestamp = self.__time__()
+        if self.length == 0:
+            lastHash = '0'
+        else:
+            lastHash = self.__hashing__(self.chain[-1])
+        self.chain.append(block(self, data, timestamp, lastHash, self.fitnessFunction))
+
+    def __time__(self):
+        utc_time = datetime.utcnow()
+        utc_timestamp = utc_time.timestamp()
+        return utc_timestamp
+
+    def __hashing__(self, unencrypted_string):
+        unencrypted_bytes = unencrypted_string.__encode__()
+        encrypted_bytes = hashlib.sha256(unencrypted_bytes)
+        encrypted_block = encrypted_bytes.hexdigest()
+        return encrypted_block
+    
+    def __fitness__(self, value):
+        return str(value)
+
+class block(Chain):
     def __init__(self, thechain, data,time,previousHash,fitness):
         self.data = data
         self.time = time
@@ -29,38 +61,6 @@ class block:
         data += str(self.nonce)
         return bytes(data, 'utf-8')
 
-class Chain:
-    
-    chains=0
-    
-    def __init__(self, chain, fittness='''Chain.__fitness__(self, '0')'''):
-        self.chain=chain
-        self.length=len(chain)
-        self.fitnessFunction=fittness
-        Chain.chains += 1
-
-    def addBlock(self, data):
-        timestamp = self.__time__()
-        if self.length == 0:
-            lastHash = '0'
-        else:
-            lastHash = self.__hashing__(self.chain[-1])
-        self.chain.append(block(self, data, timestamp, lastHash, self.fitnessFunction))
-
-    def __time__(self):
-        utc_time = datetime.utcnow()
-        utc_timestamp = utc_time.timestamp()
-        return utc_timestamp
-
-    def __hashing__(self, unencrypted_string):
-        unencrypted_bytes = unencrypted_string.__encode__()
-        encrypted_bytes = hashlib.sha256(unencrypted_bytes)
-        encrypted_block = encrypted_bytes.hexdigest()
-        return encrypted_block
-    
-    def __fitness__(self, value):
-        print(self.chain)
-        return str(value)
 
 def main():
     '''test function to check script Creates a blockchain'''
