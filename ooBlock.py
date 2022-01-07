@@ -6,12 +6,12 @@ class Chain:
     
     chains=0
     
-    def __init__(self, chain, fittness='''self.__fitness__('0')''', hashing = ('''self.__hashing__(''')):
+    def __init__(self, chain, fittness='''self.__fitness__('0')''', hashing = ('''self.__hashing__('''), notTemp=1):
         self.chain=chain
         self.length=len(chain)
         self.fitnessFunction=fittness
         self.hashingFunction=hashing
-        Chain.chains += 1
+        Chain.chains += notTemp
 
     def addBlock(self, data):
         timestamp = self.__time__()
@@ -38,7 +38,15 @@ class Chain:
         return encrypted_block
 
     def __check_chain__(self):
-        pass
+        valid = self.chain[-1].__checkBlock__()
+        if valid == 1:
+            if len(self.chain) !=1:
+                tempchain=Chain(self.chain[0:-1], self.fitnessFunction,self.hashingFunction,0).__check_chain__()
+                return tempchain
+            else:
+                return 1
+        else:
+            return 0
     
     def __get_partual_chain__(self, start, end):
         return self.chain[start,end]
@@ -68,13 +76,17 @@ class block(Chain):
         self.__generateNonce__()
 
     def __generateNonce__(self):
-        fitness={'self':self}
-        self.fitness
-        exec('hashed_block =' + self.hashing + 'self)', globals(), fitness)
-        while (fitness['hashed_block'][0:len(self.fitness)] != self.fitness):
+        while (self.__checkBlock__() != 1):
             new_nonce = random.randint(0, 2147483647)
             self.nonce = new_nonce
-            exec('hashed_block =' + self.hashing + 'self)', globals(), fitness)
+
+    def __checkBlock__(self):
+        fitness={'self':self}
+        exec('hashed_block =' + self.hashing + 'self)', globals(), fitness)
+        if fitness['hashed_block'][0:len(self.fitness)] != self.fitness:
+            return 0
+        else:
+            return 1
     
     def __encode__(self):
         data = ''
