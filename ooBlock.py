@@ -88,8 +88,15 @@ class Chain:
 
     def __fitness_value__(self):
         return len(self.chain)
-    
-    
+
+
+    def same_chain(self, chain2):
+        if self.fitnessFunction == chain2.fitnessFunction and self.fittnessValue == chain2.fittnessValue and self.hashingFunction == chain2.hashingFunction:
+            return 1
+        else:
+            return 0
+
+
     def best_chain(self, chain2):
         chain1valid = self.__check_chain__()
         chain2valid = chain2.__check_chain__()
@@ -158,7 +165,8 @@ def main():
     #print(sending)
     chain2 = Chain(byte=sending)
     chain2.addBlock('ghi')
-    chain1 = chain2.best_chain(chain1)
+    if chain1.same_chain(chain2):
+        chain1 = chain2.best_chain(chain1)
     sending=chain1.__get_chain_bytes__()
     print(sending)
 
