@@ -38,6 +38,7 @@ class Chain:
         unencrypted_bytes = unencrypted_string.__encode__()
         encrypted_bytes = hashlib.sha256(unencrypted_bytes)
         encrypted_block = encrypted_bytes.hexdigest()
+        print(encrypted_block)
         return encrypted_block
 
     def __check_chain__(self):
