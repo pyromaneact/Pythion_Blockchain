@@ -3,9 +3,9 @@ import hashlib
 import random
 
 class Chain:
-    
+
     chains=0
-    
+
     def __init__(self, chain = [], fittness='''self.__fitness_function__()''', fittnessValue = '''self.__fitness_value__()''', hashing = ('''self.__hashing__('''), byte=b'' ,notTemp=1):
         Chain.chains += notTemp
         self.chain=chain
@@ -51,10 +51,10 @@ class Chain:
                 return 1
         else:
             return 0
-    
+
     def __get_partual_chain__(self, start, end):
         return self.chain[start,end]
-    
+
     def __get_chain_bytes__(self):
         byte=b''
         byte += bytes(self.fitnessFunction + '"], ["', 'utf-8')
@@ -76,10 +76,10 @@ class Chain:
             items = each.split('", "')
             fitness={'self':self}
             exec('check =' + self.fitnessFunction, globals(), fitness)
-            self.chain.append(block( items[0], items[1], items[2], fitness['check'], self.hashingFunction))
-            
-        
-    
+            self.chain.append(block( items[0], items[1], items[2], fitness['check'], self.hashingFunction, items[3]))
+
+
+
     def __fitness_function__(self):
         fit=self.chain
         if len(fit)<1:
@@ -141,7 +141,7 @@ class block(Chain):
             return 0
         else:
             return 1
-    
+
     def __encode__(self):
         data = ''
         data += str(self.data)
