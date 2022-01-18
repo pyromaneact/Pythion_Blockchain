@@ -38,7 +38,7 @@ class Chain:
         unencrypted_bytes = unencrypted_string.__encode__()
         encrypted_bytes = hashlib.sha256(unencrypted_bytes)
         encrypted_block = encrypted_bytes.hexdigest()
-        print(encrypted_block)
+        #print(encrypted_block)
         return encrypted_block
 
     def __check_chain__(self):
@@ -162,6 +162,7 @@ def main():
     chain1 = Chain()
     chain1.addBlock('abc')
     chain1.addBlock('def')
+    chain1.addBlock('keep trying')
     sending=chain1.__get_chain_bytes__()
     #print(sending)
     chain2 = Chain(byte=sending)
