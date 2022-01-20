@@ -6,7 +6,8 @@ port = 12345
 clients=[]
 start = input('are You the first server 1,0?:')
 
-if start == 1:
+if start == '1':
+    chain1 = ooBlock.Chain()
     chain1.addBlock('192.168.0.13')
     chain1.addBlock('def')
     chain1.addBlock('keep trying')
