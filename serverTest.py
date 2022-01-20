@@ -1,22 +1,27 @@
 import socket
 import ooBlock
-s = socket.socket()
+
 host = socket.gethostname()
 port = 12345
 clients=[]
+start = input('are You the first server 1,0?:')
 
-chain1 = ooBlock.Chain()
-#chain1.addBlock('192.168.0.13')
-#chain1.addBlock('def')
-#chain1.addBlock('keep trying')
+if start == 1:
+    chain1.addBlock('192.168.0.13')
+    chain1.addBlock('def')
+    chain1.addBlock('keep trying')
+else:
+    s = socket.socket()
+    s.connect(('192.168.0.77', port))
+    s.send(b'request')
+    chain1bytes = s.recv(1024)
+    chain1 = ooBlock.Chain(byte=chain1bytes)
+    s.close()
 
-s.connect(('192.168.0.77', port))
-s.send(b'data')
-chain1bytes = s.recv(1024)
-chain1 = ooBlock.Chain(byte=chain1bytes)
-
+s = socket.socket()
 s.bind((host, port))
 s.listen(5)
+
 while True:
     print('flag')
     c, addr = s.accept()
