@@ -17,6 +17,7 @@ class Chain:
             self.__get_chain_from_bytes__(byte)
 
     def addBlock(self, data):
+        '''method that goes through the creation of a block that conects to the chain'''
         timestamp = self.__time__()
         fitness={'self':self}
         exec('check =' + self.fitnessFunction, globals(), fitness)
@@ -29,12 +30,14 @@ class Chain:
         self.chain.append(block(data, timestamp, lastHash, fitness['check'], self.hashingFunction))
 
     def __time__(self):
+        '''method to generate the current time'''
         utc_time = datetime.utcnow()
         utc_timestamp = utc_time.timestamp()
         return utc_timestamp
 
 
     def __hashing__(self, unencrypted_string):
+        ''' method for default hashing method that can be swaped out with another'''
         unencrypted_bytes = unencrypted_string.__encode__()
         encrypted_bytes = hashlib.sha256(unencrypted_bytes)
         encrypted_block = encrypted_bytes.hexdigest()
