@@ -2,6 +2,31 @@ import socket
 import ooBlock
 import threading
 
+def chainNetwork(port, host):
+    port=int(port)
+    s = socket.socket()
+    s.bind((host, port))
+    s.listen(5)
+    
+    newRequestThread = threading.Thread(target=newRequest, name='newChainThread')
+    newDataThread = threading.Thread(target=newData, name='newChainThread')
+    newChainThread = threading.Thread(target=newchains, name='newChainThread')
+    while True:
+        c, addr = s.accept()
+        conectionType = c.recv(1024)
+        if conectionType == b'request':
+            newRequestThread.start()
+    
+    
+        elif conectionType == b'data':
+            newDataThread.start()
+                
+    
+        elif conectionType == b'newChain':
+            if newDataThread.is_alive():
+                newDataThread.abort()
+            newChainThread.start()
+        c.close()
 
 def newRequest():
     clients.append(addr[0])
@@ -13,10 +38,15 @@ def newData():
     data = c.recv(1024)
     data = data.decode("utf-8")
     c.close()
+    newsocket = socket.socket()
+    for ip in clients:  
+        newsocket.connect((ip, str(port)))
+        newsocket.send(b'data')
+        newsocket.send(data)
     chain1.addBlock(data)
     newsocket = socket.socket()
     for ip in clients:  
-        newsocket.connect((ip, port))
+        newsocket.connect((ip, str(port)))
         newsocket.send(b'newChain')
         newsocket.send(chain1.__get_chain_bytes__())
 
@@ -53,25 +83,22 @@ else:
     chain1 = ooBlock.Chain(byte=chain1bytes)
     s.close()
 
-s = socket.socket()
-s.bind((host, port))
-s.listen(5)
+networkingThread = threading.Thread(target=chainNetwork, args=(port, host), name='networkingThread')
+networkingThread.start()
+flag =0
 
-newRequestThread = threading.Thread(target=newRequest, name='newChainThread')
-newDataThread = threading.Thread(target=newData, name='newChainThread')
-newChainThread = threading.Thread(target=newchains, name='newChainThread')
-while True:
-    print('flag')
-    c, addr = s.accept()
-    conectionType = c.recv(1024)
-    if conectionType == b'request':
-        newRequestThread.start
-
-
-    elif conectionType == b'data':
-        newDataThread.start
-            
-
-    elif conectionType == b'newChain':
-        newChainThread.start
-    c.close()
+while flag == 0 :
+    print('1: add data \n 2:see blockChain \n 3: quit')
+    option = input('pick an option:')
+    if int(option) == 3:
+        flag=1
+    elif int(option) == 2:
+        print(chain1.__get_chain_bytes__().decode("utf-8"))
+    elif int(option) == 1:
+        data=input("what data do you want to transmit: ")
+        for ip in clients:
+            newsocket.connect((ip, port))
+            newsocket.send(b'data')
+            newsocket.send(data)
+    else:
+        print('incorrect input')
