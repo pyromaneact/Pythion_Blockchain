@@ -11,7 +11,6 @@ def chainNetwork(port, host):
 
 
     while True:
-        print('test--------------------------------------')
         c, addr = s.accept()
         
         
@@ -37,8 +36,6 @@ def chainNetwork(port, host):
             c.close()
             newChainThread = threading.Thread(target=newchains, args=(newChainBytes,), name='newChainThread')
             newChainThread.start()
-        else:
-            pass
         c.close()
     print('done')
 
@@ -76,17 +73,17 @@ global chain1
 global  clients
 host = socket.gethostname()
 port = 12345
-clients=["192.168.0.77"]
+clients=["127.0.0.1"]
 start = input('are You the first server 1,0?:')
 
 if start == '1':
     chain1 = ooBlock.Chain()
-    chain1.addBlock('192.168.0.77')
+    chain1.addBlock('127.0.0.1')
     chain1.addBlock('def')
     chain1.addBlock('keep trying')
 else:
     s = socket.socket()
-    s.connect(('192.168.0.77', port))
+    s.connect(('127.0.0.1', port))
     s.send(b'request')
     chain1bytes = s.recv(1024)
     chain1 = ooBlock.Chain(byte=chain1bytes)
@@ -107,7 +104,6 @@ while flag == 0 :
         data=input("what data do you want to transmit: ")
         newsocket = socket.socket()
         for ip in clients:
-            print(ip)
             newsocket.connect((ip, port))
             newsocket.send(b'data')
             newsocket.send(bytes(data, encoding="utf-8"))
