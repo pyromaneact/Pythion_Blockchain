@@ -76,17 +76,17 @@ global chain1
 global  clients
 host = socket.gethostname()
 port = 12345
-clients=["192.168.0.77"]
+clients=["178.62.78.208"]
 start = input('are You the first server 1,0?:')
 
 if start == '1':
     chain1 = ooBlock.Chain()
-    chain1.addBlock('192.168.0.77')
+    chain1.addBlock('178.62.78.208')
     chain1.addBlock('def')
     chain1.addBlock('keep trying')
 else:
     s = socket.socket()
-    s.connect(('192.168.0.77', port))
+    s.connect((clients[0], port))
     s.send(b'request')
     chain1bytes = s.recv(1024)
     chain1 = ooBlock.Chain(byte=chain1bytes)
